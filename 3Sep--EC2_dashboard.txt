@@ -1,0 +1,43 @@
+---------------------------------Running Dashboard in ec2 instances-------------------------------
+1.Run EC2 instance 
+	#--------to create keypair -----------------------------
+       1.aws ec2 create-key-pair --key-name test --query 'KeyMaterial' --output text > test_key.pem
+       
+	#.--------------create own security group--------------------
+       2.aws ec2 create-security-group --group-name Myteam --description "Testing"
+
+	#------------------------------allow ssh port----------------------------------------------
+
+	3. aws ec2 authorize-security-group-ingress --group-name Myteam --protocol tcp --port 22 --cidr 0.0.0.0/0
+	
+	---------------------launch ec2--------------------------------
+	4.aws ec2 run-instances --image-id ami-0522ab6e1ddcc7055 --count 1 --instance-type t2.micro --key-name test_key --security-groups Myteam
+ 	(replace  ubuntu ami id with ur account)
+		---------------view instances--------------------------
+		#aws ec2 describe-instances
+
+	5.chmod 400 "test_key.pem" --- to make your key is not publicly viewable
+
+	---------------------------------now connect the instance--------------------------
+	6.ssh -i /path/to/your-key-name.pem ubuntu@your-public-ip 
+	ex(ssh -i "test_key.pem" tamil@13.232.75.186)
+
+
+2. -------------------------------------In EC2-------------------------------------------------------------------
+	
+	1.# first copy the file from the local window/ubuntu to ec2 ubuntu ---> scp -i test_key.pem -r /mnt/e/Dotnet/CMS-Dashboard-master.zip ubuntu@65.0.75.68:~/
+
+	#Now open the folder CMS-Dashboard by ls command u can see the files 
+	#then we have to install all the requirements
+
+		Requirements:
+	
+	1)sudo apt install nodejs npm (install  latest version of nodejs)(https://nodejs.org/en/download/package-manager)
+	#to check version
+		-node -v
+		-npm -v
+	2) Install ionic (sudo npm install -g @ionic/cli)
+	3) to run (ionic serve in terminal)
+
+
+		

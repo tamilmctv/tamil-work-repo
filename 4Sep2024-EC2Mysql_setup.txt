@@ -1,0 +1,56 @@
+
+-------------------------------------------------------Mysql setup in ec2---------------------------------------------------------------------------
+
+1.Connect to Your EC2 Instance:
+	aws ec2 create-security-group --group-name MySQL_Security_Group --description "Security group for MySQL"
+
+	# Allow SSH traffic (Port 22)
+	aws ec2 authorize-security-group-ingress --group-name MySQL_Security_Group --protocol tcp --port 22 --cidr 0.0.0.0/0
+
+	# Allow MySQL traffic (Port 3306)
+	aws ec2 authorize-security-group-ingress --group-name MySQL_Security_Group --protocol tcp --port 3306 --cidr 0.0.0.0/0
+
+	# ssh -i your-key.pem ubuntu@your-ec2-public-ip
+
+2.Update the Package List
+
+	#sudo apt update
+
+3. Install MySQL Server:
+
+	#sudo apt install mysql-server -y
+
+4. Secure MySQL Installation:
+
+	# sudo mysql_secure_installation(if needed)
+
+5. Change bind address:
+	
+	##sudo su
+	
+	#cd /etc/mysql/mysql.conf.d
+	
+	#ls
+
+	# sudo nano mysqld.cnf
+
+	in the file 
+		search for the line bind-address =127.0.0.1 and mysqlx-bind-address = 127.0.0.1 change to 0.0.0.0 (MySQL to listen for connections from any IP address, not just localhost)
+
+6. systemctl restart mysql.service
+
+
+7. sudo mysql ---------> #SELECT User, Host FROM mysql.user WHERE User='bvc';
+			
+
+	#CREATE USER 'remote_user'@'%' IDENTIFIED BY 'your_password';
+	#GRANT ALL PRIVILEGES ON *.* TO 'remote_user'@'%';
+	#FLUSH PRIVILEGES;
+	#EXIT;
+
+
+8.now open the mysql workbench ----------> add new connection -->enter any connection name ,in IPaddr --->paste public ip os instance
+
+as well as -->enter username and password as u given and then run test connection
+
+ *******************************Now u can able to access the database server*************************************************************************
